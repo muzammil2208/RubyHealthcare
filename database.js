@@ -11,6 +11,6 @@ databaseconnection.query(`select * from users`,(err,result,fields)=>{
     {
         return console.log(err)
     }
-    return console.log(result);   
+    return console.log("database connected!");   
 })
 module.exports=databaseconnection;

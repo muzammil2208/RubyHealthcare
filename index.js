@@ -1,8 +1,10 @@
 const express = require('express')
+const app=express();
 const path=require('path')
 const db=require('./database.js')
-const app = express()
+const register=require('./register');
 const port=3000
+const flash=require('connect-flash')
 app.set('view engine','ejs')
 app.set('views',__dirname+'/views')
 app.use(express.static(path.join(__dirname, 'public')));
@@ -29,13 +31,8 @@ app.post("/register",(req,res)=>{
   const password=req.body.password;
   const email=req.body.email;
   console.log(username+" with email:"+email+" has registered");
-  db.query("select email from rubyhealthcare",(err,result,fields)=>{
-    if(err)
-    {
-        return console.log(err)
-    }
-    return console.log(result);   
-  })
+  register(username,email,password);
+
 })
 app.listen(port,() => {
     console.log(`port listening at port number:&${port}`);

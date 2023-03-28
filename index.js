@@ -1,39 +1,19 @@
-const express = require('express')
+const express= require("express")
+const db=require('./routes/db-config');
 const app=express();
-const path=require('path')
-const db=require('./database.js')
-const register=require('./register');
-const port=3000
-const flash=require('connect-flash')
-app.set('view engine','ejs')
-app.set('views',__dirname+'/views')
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.json());       
-app.use(express.urlencoded({extended: true})); 
-//routing
+const dotenv=require("dotenv").config();
+const port=process.env.PORT||3000
+const cookie=require('cookie-parser');
+
+//SETTING 
+app.set('view engine','ejs');
+app.set('views','./views');
+app.use('/js',express.static(__dirname+'./public/js'))
+app.use('/css',express.static(__dirname+'./public/css'))
 
 
-app.get('/', (req, res) => {
-  res.render('index');
-})
-app.get('/login',(req,res)=>{
-  res.render('login');
-})
-app.get('/register',(req,res)=>{
-  res.render('register')
-})
-app.get('*',(req,res)=>{
-  res.send("This path is no specified")
-})
-// post methods
-app.post("/register",(req,res)=>{
-  const username=req.body.username;
-  const password=req.body.password;
-  const email=req.body.email;
-  console.log(username+" with email:"+email+" has registered");
-  register(username,email,password);
 
-})
-app.listen(port,() => {
-    console.log(`port listening at port number:&${port}`);
+
+app.listen(port,()=>{
+    console.log(`server listening at port:${port}`);
 })

@@ -1,5 +1,6 @@
 const express= require("express")
 const db=require('./routes/db-config');
+const isCorrect=require('./middlewares/isCorrect')
 const app=express();
 const dotenv=require("dotenv").config();
 const port=process.env.PORT||3000
@@ -13,18 +14,18 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true})); 
 app.use(express.static(__dirname + '/public'));
  
-app.get('/',(req,res)=>{
+app.get('/',(req,res,)=>{
+
     res.render('index');
+
 })
 
 app.get('/register',(req,res)=>{
     res.render('register')
 })
 
-app.post('/register',(req,res)=>{
-    console.log(req.body.username);
-    console.log(req.body.email);
-    console.log(req.body.password);
+app.post('/register',isCorrect,(req,res)=>{
+    
     res.redirect('/register');
 })
 

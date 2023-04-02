@@ -24,7 +24,14 @@
             <a><button class="action_btn"><img class="account" src=images/account.svg> Account</button></a>
         </div>
     </navbar>
+    
+     
     <div class="container-sm">
+        <% if(message){ %>
+            <div class="alert alert-<%=style%>" role="alert">
+               <%= message%>
+              </div>
+         <% } %>
         <form action="/register" method="post">
             <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label">Username</label>

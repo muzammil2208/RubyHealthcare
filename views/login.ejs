@@ -4,21 +4,46 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Page</title>
+    <title>RubyHealthcare
+    </title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/stylesheets/style.css">
 </head>
 <body>
-    <h1>Login</h1>
-    <form action="/login" method="post">
-        <div>
-            <label>Email</label>
-            <input type="email" id="email" name="email">
+    <navbar>
+        <h3>Ruby Healthcare</h3>
+        <nav>
+            <ul class="nav-links">
+                <li>Shop</li>
+                <li>contact</li>
+                <li>about us</li>
+            </ul>
+        </nav>
+        <button class="search"><img src=images/search.svg class="search-icon"> Search anything</button>
+        <div class="actions">
+            <a><button class="action_btn"><img class="shopping-cart" src=images/cart.svg> Cart</button></a>
+            <a><button class="action_btn"><img class="account" src=images/account.svg> Account</button></a>
         </div>
-        <div>
-            <label>password</label>
-            <input type="password" id="password" name="password">
-        </div>
-        <input type="submit" name="submit" value="submit">
-    </form>
-    <a href="/register">register</a>
+    </navbar>
+    <div class="container-sm">
+        <% if(message){ %>
+            <div class="alert alert-<%=style%>" role="alert">
+               <%= message%>
+              </div>
+         <% } %>
+        <form action="/login" method="post">
+            <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">Username</label>
+                <input type="text" name="username" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+              </div>
+            <div class="mb-3">
+              <label for="exampleInputPassword1" class="form-label">Password</label>
+              <input type="password" name="password" class="form-control" id="exampleInputPassword1">
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.min.js" integrity="sha384-heAjqF+bCxXpCWLa6Zhcp4fu20XoNIA98ecBC1YkdXhszjoejr5y9Q77hIrv8R9i" crossorigin="anonymous"></script>
 </body>
 </html>

@@ -5,7 +5,7 @@ const app=express();
 const dotenv=require("dotenv").config();
 const port=process.env.PORT||3000
 const cookie=require('cookie-parser');
-
+const loginValidation=require('./middlewares/login')
 //SETTING 
 app.set('view engine','ejs');
 app.set('views','./views');
@@ -22,6 +22,12 @@ app.get('/',(req,res,)=>{
 
 })
 
+app.get('/login',(req,res)=>{
+    res.render('login',{message:"please enter your credentials",style:"dark"})
+})
+app.post('/login',loginValidation,(req,res)=>{
+    res.redirect('/login')
+})
 app.get('/register',(req,res)=>{
     res.render('register',{message:"please enter your details",style:"dark"})
 })

@@ -6,58 +6,32 @@ const register=async function(req,res,next)
     const username=req.body.username;
     const email=req.body.email;
     const password=req.body.password;
-    let emailvalidation=false;
-    let usernamevalidation=false
-    //validating if email is already been used;
+
+   
     const hashedPassword=await bcrypt.hash(password,10);
    
-    //validating if email entered is not duplicate
-    db.query('select email,username from users where email=?',[email],(error,result)=>{
-            if(error)
-            {
-                res.render("register",{message:"unable to get information from database",style:"danger"})
-            }
-            else if(result.length>0)
-            {
-                res.render("register",{message:"email already used please register with different email",style:"danger"})
-            }
-            else
-            {
-               console.log("email validation successfull")
-            }
-    })
-    
-    //validating if username entered is not duplicate
-     db.query('select username from users where username=?',[username],(error,result)=>{
-        if(error)
-        {
-            res.render("register",{message:"unable to get information from database",style:"danger"})
-        }
+    //validating if email or username entered is not duplicate
+    db.query(`select * from users where username=? and email=?`,[username,email],(error,result)=>{
+        if(error){res.render('register',{message:"error while retriving data from database",syle:"danger"})}
         else if(result.length>0)
         {
-            res.render("register",{message:"username has already been used, please choose diffrent username",style:"danger"})
+            res.render("register",{message:"user with either same username or email address is already present",style:"danger"})
         }
         else
         {
-            console.log("username validation successfull")
+            db.query(`insert into users(uid,username,email,password) values(?,?,?,?)`,[Date.now(),username,email,hashedPassword],(error,result)=>{
+                if(error)
+                {
+                    res.render('register',{message:"error while adding users to the database",syle:"danger"})
+                }
+                else
+                {
+                    console.log(result)
+                    res.render('register',{message:"user successfully registerd",style:"success"})
+                }
+            })
         }
     })
-     if(emailvalidation&&usernamevalidation)
-    {
-        db.query(`insert into users(uid,username,email,hashedPassword) values(?,?,?,?)`,[date.now(),username,email,hashedPassword],(error,result)=>{
-            if(error){
-                res.render("register",{message:"faced some error while adding the user",syle:"danger"})
-                console.log(error)
-            }
-            else
-            {
-                res.render("register",{message:"User added successfully",syle:"success"})
-            }
-        })
-    }
-    console.log(emailvalidation);
-    console.log(usernamevalidation)
-    
 }
 
 module.exports=register

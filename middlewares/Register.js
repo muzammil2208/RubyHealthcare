@@ -11,7 +11,7 @@ const register=async function(req,res,next)
     const hashedPassword=await bcrypt.hash(password,10);
    
     //validating if email or username entered is not duplicate
-    db.query(`select * from users where username=? and email=?`,[username,email],(error,result)=>{
+    db.query(`select * from users where username=? or email=?`,[username,email],(error,result)=>{
         if(error){res.render('register',{message:"error while retriving data from database",syle:"danger"})}
         else if(result.length>0)
         {

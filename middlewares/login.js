@@ -25,4 +25,13 @@ const loginValidation=async function(req,res,next)
     })
     
 }
-module.exports=loginValidation
+
+const loggedIn=function loggedIn(req, res, next) {
+    if (req.user) {
+        console.log(req.user);
+        res.render('login',{message:`${req.user.username} has already logged in`,style:"success"})
+    } else {
+        res.render('login',{message:"please enter username and password",style:"dark"});
+    }
+}
+module.exports={loggedIn,loginValidation}

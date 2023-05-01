@@ -1,3 +1,5 @@
+
+//initializing 
 const express= require("express")
 const db=require('./routes/db-config');
 const register=require('./middlewares/Register')
@@ -5,9 +7,13 @@ const app=express();
 const dotenv=require("dotenv").config();
 const port=process.env.PORT||3000
 const cookie=require('cookie-parser');
-const loginValidation=require('./middlewares/login')
+const {loggedIn} =require('./middlewares/login')
 const session=require('express-session');
 const mysqlStore=require('express-mysql-session')(session);
+const passport=require('passport')
+const LocalStrategy=require('passport-local')
+const bcrypt=require('bcrypt')
+
 const options ={
     connectionLimit: 10,
     password: process.env.DATABASE_PASSWORD,
@@ -18,6 +24,9 @@ const options ={
     
 }
 const  sessionStore = new mysqlStore(options);
+
+
+
 //SETTING 
 app.set('view engine','ejs');
 app.set('views','./views');
@@ -36,25 +45,53 @@ app.use(session({
         
     }
 }))
+app.use(passport.initialize())
+app.use(passport.session())
+
+//setting up passport js
+const customerFields={
+    usernameField:'username',
+    passwordField:'password'
+}
+const verifyCallback=(username,password,done)=>{
+    
+    db.query(`select * from users where username=?`,[username],async(error,result)=>{
+        if(error){return done(error)}
+        if(await bcrypt.compare(pass,result[0].password))
+        {
+            return done(null,result)
+        }
+        else
+        {
+            return done(null,false)
+        }
+            
+
+    })
+}
+ const strategy=new LocalStrategy(customerFields,verifyCallback)
+ passport.use(strategy)
+passport.serializeUser((result,done)=>{
+    console.log("inside serialize")
+    done(null,result[0].uid)
+})
+passport.deserializeUser((result,done)=>{
+    console.log("inside deserialize")
+    db.query(`select * from users where uid=?`,[result],(error,result)=>{return done(null,result[0])})
+})
+
+
+
+
 //routes
 app.get('/',(req,res,)=>{
-    if(req.session.viewCount)
-    {
-        req.session.viewCount=req.session.viewCount+1;
-    }
-    else
-    {
-        req.session.viewCount=1;
-    }
-    console.log(req.session.viewCount)
     res.render('index');
-
 })
 
-app.get('/login',(req,res)=>{
+app.get('/login',loggedIn,(req,res)=>{
     res.render('login',{message:"please enter your credentials",style:"dark"})
 })
-app.post('/login',loginValidation);
+app.post('/login',passport.authenticate('local',{failureRedirect:'/login',successRedirect:'/'}));
 
 app.get('/register',(req,res)=>{
     res.render('register',{message:"please enter your details",style:"dark"})
